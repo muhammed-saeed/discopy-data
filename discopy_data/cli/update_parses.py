@@ -25,6 +25,8 @@ def main(src, tgt, constituent_parser, dependency_parser, constituents, dependen
     sys.stderr.write('SUPAR load dependency parser!\n')
     dparser = supar.Parser.load(dependency_parser) if dependencies else None
     for line in tqdm(src):
+        print(f"{src} $$$$$ {line}", file=sys.stderr)
+        # raise ValueError()
         doc = Document.from_json(json.loads(line))
         for sent_i, sent in enumerate(doc.sentences):
             inputs = [(t.surface, t.upos) for t in sent.tokens]

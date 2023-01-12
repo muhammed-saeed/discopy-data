@@ -17,11 +17,14 @@ def load_parser(use_gpu=False):
     parser = trankit.Pipeline('english', cache_dir=os.path.expanduser('~/.trankit/'), gpu=use_gpu)
     parser.tokenize("Init")
     sys.stdout = tmp_stdout
+    print("we have completed the load_paraser step", file=sys.stderr)
     return parser
 
 
 def get_tokenized_sentences(parser, text):
+    print("we entered the get_tokenized_sentences")
     parsed = parser.tokenize(text)
+    print("we done the get_tokenized_sentences")
     token_offset = 0
     sents = []
     for sent_i, sent in enumerate(parsed['sentences']):
@@ -36,6 +39,7 @@ def get_tokenized_sentences(parser, text):
 
 def get_parsed_sentences(parser, text):
     parsed = parser(text)
+    print("we have passed the parser", file=sys.stderr)
     token_offset = 0
     sents = []
     for sent_i, sent in enumerate(parsed['sentences']):
@@ -69,12 +73,13 @@ def load_texts(texts: List[str], tokenize_only=False) -> List[Document]:
             'text': text,
             'sentences': sentences
         }, load_relations=False)
+        #load_relation=False
 
 
 def load_texts_fast(texts: List[str], tokenize_only=True) -> List[Document]:
     from nltk.tokenize import sent_tokenize
     from nltk.tokenize import TreebankWordTokenizer
-
+    print('we are using the load_texts_fast!!!')
     for text_i, text in tqdm(enumerate(texts)):
         sentence_splits = [len(s) for s in sent_tokenize(text)]
         sents = []
