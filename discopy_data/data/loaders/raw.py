@@ -79,7 +79,7 @@ def load_texts(texts: List[str], tokenize_only=False) -> List[Document]:
 def load_texts_fast(texts: List[str], tokenize_only=True) -> List[Document]:
     from nltk.tokenize import sent_tokenize
     from nltk.tokenize import TreebankWordTokenizer
-    print('we are using the load_texts_fast!!!')
+    print('we are using the load_texts_fast!!!', file=sys.stderr)
     for text_i, text in tqdm(enumerate(texts)):
         sentence_splits = [len(s) for s in sent_tokenize(text)]
         sents = []
