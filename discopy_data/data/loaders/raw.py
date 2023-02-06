@@ -61,6 +61,7 @@ def get_parsed_sentences(parser, text):
 
 def load_texts(texts: List[str], tokenize_only=False) -> List[Document]:
     parser = load_parser()
+    print("we are using load text", file=sys.stderr)
     for text_i, text in tqdm(enumerate(texts)):
         sentences = get_tokenized_sentences(parser, text) if tokenize_only else get_parsed_sentences(parser, text)
         yield Document.from_json({
@@ -75,11 +76,29 @@ def load_texts(texts: List[str], tokenize_only=False) -> List[Document]:
         }, load_relations=False)
         #load_relation=False
 
+def load_textss(texts: List[str], parserForLoadText ,tokenize_only=False) -> List[Document]:
+    # parser = load_parser()
+    parser = parserForLoadText
+    print("we are using load text", file=sys.stderr)
+    for text_i, text in tqdm(enumerate(texts)):
+        sentences = get_tokenized_sentences(parser, text) if tokenize_only else get_parsed_sentences(parser, text)
+        yield Document.from_json({
+            'docID': hash(text),
+            'meta': {
+                'fileID': f'raw_{text_i:05}',
+                'corpus': 'raw',
+                'created': datetime.datetime.now().isoformat(),
+            },
+            'text': text,
+            'sentences': sentences
+        }, load_relations=False)
+        #load_relation=False
 
 def load_texts_fast(texts: List[str], tokenize_only=True) -> List[Document]:
     from nltk.tokenize import sent_tokenize
     from nltk.tokenize import TreebankWordTokenizer
-    print('we are using the load_texts_fast!!!', file=sys.stderr)
+    print('we are using the load_texts_fast!!!',file =sys.stderr)
+    print(f"the text that passed to the fast text is {texts}", file=sys.stderr)
     for text_i, text in tqdm(enumerate(texts)):
         sentence_splits = [len(s) for s in sent_tokenize(text)]
         sents = []
@@ -98,7 +117,9 @@ def load_texts_fast(texts: List[str], tokenize_only=True) -> List[Document]:
                     break
                 w_i = 0
                 sent_offset += sentence_splits[sent_i]
-
+        print("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$", file=sys.stderr)
+        print(f"The text after fast_text is {text}",file=sys.stderr)
+        print(f"The sentences generated are {sents}")
         yield Document.from_json({
             'docID': hash(text),
             'meta': {
@@ -109,3 +130,4 @@ def load_texts_fast(texts: List[str], tokenize_only=True) -> List[Document]:
             'text': text,
             'sentences': sents
         }, load_relations=False)
+        
