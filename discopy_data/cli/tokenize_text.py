@@ -1,6 +1,6 @@
 import json
 import re
-
+import sys
 import click
 
 from discopy_data.data.loaders.raw import load_texts, load_texts_fast
@@ -16,6 +16,6 @@ def main(src, tgt, tokenize_only, fast):
     for doc in document_loader(re.split(r'\n\n\n+', src.read()), tokenize_only=tokenize_only):
         tgt.write(json.dumps(doc.to_json()) + '\n')
 
-
+    print("we have passed the tokenizer step succussfully", file=sys.stderr)
 if __name__ == '__main__':
     main()
