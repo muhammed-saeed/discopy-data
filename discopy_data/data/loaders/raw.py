@@ -59,6 +59,23 @@ def get_parsed_sentences(parser, text):
     return sents
 
 
+
+def load_textsParserArgument(texts: List[str], parser, tokenize_only=False) -> List[Document]:
+    for text_i, text in tqdm(enumerate(texts)):
+        sentences = get_tokenized_sentences(parser, text) if tokenize_only else get_parsed_sentences(parser, text)
+        yield Document.from_json({
+            'docID': hash(text),
+            'meta': {
+                'fileID': f'raw_{text_i:05}',
+                'corpus': 'raw',
+                'created': datetime.datetime.now().isoformat(),
+            },
+            'text': text,
+            'sentences': sentences
+        }, load_relations=False)
+
+
+
 def load_texts(texts: List[str], tokenize_only=False) -> List[Document]:
     parser = load_parser()
     for text_i, text in tqdm(enumerate(texts)):
